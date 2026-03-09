@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class WbsCnMatKitting extends Model
+{
+    use HasFactory;
+
+    protected $table = 'tbl_wbs_material_kitting';
+    protected $connection = 'wbs_cn';
+}
