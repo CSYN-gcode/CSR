@@ -81,7 +81,7 @@ class CustomersController extends Controller
         return Customers::where('id', $request->id)->first();
     }
 
-    public function getCustomers(Request $request){
+    public function getCustomersDropdownList(Request $request){
         return Customers::where('status', 0)->get();
     }
 

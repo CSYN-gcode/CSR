@@ -44,21 +44,15 @@
 
                                 {{-- @if ( $globalUser && in_array( $globalUser->position, [0,2,3])) --}}
                                     <div class="float-sm-right">
-                                        <button class="btn btn-dark" id="btnShowAddPartsTroubleHistory">
-                                            <i class="fa fa-initial-icon"></i> Add Past Trouble History
+                                        <button class="btn btn-dark" id="btnShowAddCSR">
+                                            <i class="fa fa-initial-icon"></i> Add CSR Document
                                         </button>
                                     </div>
                                 {{-- @endif --}}
 
                                 <div class="float-sm-left col-2">
-                                    {{-- <form id="frmSearchYear" class="form-inline"> --}}
-                                        <label><strong>Filter Year : &nbsp;</strong></label>
-                                        <input type="text" id="SearchYear" class="form-control" name="year" title="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">
-
-                                        {{-- <button class="btn btn-primary" type="submit">Search</button> --}}
-                                    {{-- </form> --}}
-
-                                {{-- <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalAdvancedSearch" id=""><i class="fas fa-search fa-md"></i> Advanced Search</button> --}}
+                                    <label><strong>Filter Year : &nbsp;</strong></label>
+                                    <input type="text" id="SearchYear" class="form-control" name="year" title="<?php echo date('Y'); ?>" value="<?php echo date('Y'); ?>">
                                 </div>
 
                                 <div class="float-sm-left mb-4 col-2">
@@ -82,18 +76,18 @@
                                 </div>
 
                                 <div class="table-responsive">
-                                    <table id="tblPartsTroubleHistory" class="table table-bordered table-striped table-hover" style="width: 100%;">
+                                    <table id="tblCSR" class="table table-bordered table-striped table-hover" style="width: 100%;">
                                         <thead>
                                             <tr>
                                                 <th style="width: 5%;">Action</th>
                                                 <th style="width: 5%;">Status</th>
-                                                <th style="width: 10%;" class="text-center">Date Encountered</th>
-                                                <th style="width: 10%;" class="text-center">Situation</th>
-                                                <th style="width: 5%;"  class="text-center">Section</th>
-                                                <th style="width: 15%;" class="text-center">Series / Model</th>
-                                                <th style="width: 15%;" class="text-center">Mode of Defect</th>
-                                                <th style="width: 25%;" class="text-center">Illustration of Defect</th>
-                                                <th style="width: 10%;" class="text-center">No of Occurence</th>
+                                                <th style="width: 10%;" class="text-center">Contro No</th>
+                                                <th style="width: 10%;" class="text-center">Customer Name</th>
+                                                <th style="width: 5%;"  class="text-center">Business Process</th>
+                                                <th style="width: 15%;" class="text-center">Date Applied</th>
+                                                <th style="width: 15%;" class="text-center">Rev No.</th>
+                                                <th style="width: 25%;" class="text-center">Change Description</th>
+                                                <th style="width: 10%;" class="text-center">Prepared By</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -113,120 +107,104 @@
     <!-- /.content-wrapper -->
 
     <!-- MODALS -->
-    <div class="modal fade" id="modalPartsTroubleHistory" data-bs-backdrop="static">
-        <div class="modal-dialog modal-xl-custom">
+    <div class="modal fade" id="modalCSR" data-bs-backdrop="static">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title"><i class="fa fa-plus"></i> Add/Edit Past Trouble History Info</h4>
+                    <h4 class="modal-title"><i class="fa fa-plus"></i> Add/Edit CSR Document Info</h4>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form method="post" id="formPartsTroubleHistory" autocomplete="off">
+                <form method="post" id="formCSR" autocomplete="off">
                     @csrf
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-sm-4">
-                                <input type="hidden" id="txtPartsTroubleHistoryId" name="history_id">
+                            <div class="col-sm-6">
+                                <input type="hidden" id="txtCSRId" name="csr_document_id">
 
                                 <div class="form-group">
-                                    <label>Situation</label>
-                                    <select class="form-control select2bs5" name="situation" id="selectSituation" required>
-                                         {{-- AUTO GENERATE --}}
-                                        <option value="" disabled selected> Select Situation </option>
+                                    <label>Control No</label> {{-- AUTO-GENERATE --}}
+                                    <input type="text" class="form-control" name="control_no" id="controlNo" placeholder="Auto Generate" readonly>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Customer Name</label>
+                                    <select class="form-control select2bs5 selectCustomer" name="customer" id="customer" required> {{-- AUTO GENERATE --}}
+                                        <option value="" disabled selected> Select Customer </option>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Section</label>
-                                    <select class="form-control" name="section" id="section" required>
-                                        <option value="" disabled selected>Select Section</option>
-                                        <option value="TS">TS</option>
-                                        <option value="CN">CN</option>
-                                        <option value="PPD">PPD</option>
-                                        <option value="YF">YF</option>
-                                    </select>
+                                    <label>Business Process</label>
+                                    <input type="text" class="form-control" name="business_process" id="businessProcess" required>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Date Applied</label>
+                                    <input type="date" class="form-control" name="date_applied" id="dateApplied" required>
                                 </div>
 
-                                <!--ATTACHMENT-->
                                 <div class="form-group">
-                                    <div class="form-control-label" id="attachmentDiv">
-                                        <label for="imageUpload" class="form-control-label">Illustration of Defect</label>
+                                    <label>Rev No.</label>
+                                    <input type="text" class="form-control" name="rev_no" id="revNo" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Description of Change</label>
+                                    <input type="text" class="form-control" name="change_description" id="changeDescription" required>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <!--PDF ATTACHMENT-->
+                                <div class="form-group">
+                                    <div class="form-control-label" id="pdfAttachmentDiv">
+                                        <label for="pdfAttachmentDiv" class="form-control-label">PDF ATTACHMENT</label>
                                     </div>
-                                    <input type="file" class="form-control" name="illustration_of_defect" id="illustrationOfDefect" accept="image/*" required>
-                                    <input type="text" class="form-control d-none" name="illustration_of_defect_filename" id="illustrationOfDefectFileName" readonly>
-                                    <div class="form-group form-check d-none m-0" id="btnReuploadTriggerDiv">
-                                        <input type="checkbox" class="form-check-input d-none" id="btnReuploadTrigger">
-                                        <label class="d-none" id="btnReuploadTriggerLabel"> Re-upload File</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>Series / Model Name</label>
-                                    {{-- <input type="text" class="form-control" name="model" id="model" required> --}}
-                                    <select class="form-control select2bs5" name="model" id="selectDeviceName" disabled required>
-                                        <option value="" disabled selected> Select Series Name </option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Mode of Defect</label>
-                                    <select class="form-control select2bs5" name="defect_id" id="defectId" required></select>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>Date Encountered</label>
-                                    <input type="date" class="form-control" name="date_encountered" id="dateEncountered" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>No. of Occurrence</label>
-                                    {{-- AUTO-GENERATE --}}
-                                    <input type="text" class="form-control" name="no_of_occurrence" id="noOfOccurrence" placeholder="Auto Generate" readonly>
-                                </div>
-                            </div>
-
-                            {{-- Multiple Data for Improvement Actions --}}
-                            <div class="row">
-                                <div class="col">
-                                    <div class="table-responsive">
-                                        <div class="d-flex justify-content-between">
-
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <button type="button" id="btnAddImprovementAction" class="btn btn-primary"><i class="fa fa-plus"></i> Add Improvements</button>
-                                        </div>
-                                        <br>
-                                        <table class="table table-sm" id="tblImprovementActions">
-                                            <thead>
-                                                <tr>
-                                                    <th style="width: 5%;">Action</th>
-                                                    <th style="width: 10%;">Factor</th>
-                                                    <th style="width: 15%;">Cause</th>
-                                                    <th style="width: 20%;">Analysis</th>
-                                                    <th style="width: 20%;">Counter Measure</th>
-                                                    <th style="width: 20%;">PIC</th>
-                                                    <th style="width: 10%;">Implementation Date</th>
-                                                    {{-- <th style="width: 10%;">Remarks</th> --}}
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
+                                    <input type="file" class="form-control" name="pdf_attachment" id="pdfAttachment" accept=".pdf" required>
+                                    <input type="text" class="form-control d-none" name="pdf_attachment_filename" id="pdfAttachmentFileName" readonly>
+                                    <div class="form-group form-check d-none m-0" id="btnReuploadPdfTriggerDiv">
+                                        <input type="checkbox" class="form-check-input d-none" id="btnReuploadPdfTrigger">
+                                        <label class="d-none" id="btnReuploadPdfTriggerLabel"> Re-upload PDF File</label>
                                     </div>
                                 </div>
-                            </div>
-                            {{-- Multiple Data for Improvement Actions --}}
 
+                                <div class="form-group">
+                                    <label>Prepared By</label>
+                                    {{-- <input type="text" class="form-control" name="prepared_by" id="preparedById" value="{{ $globalUser->rapidx_emp_id }}" hidden>
+                                    <input type="text" class="form-control" id="preparedByName" value="{{ $globalUser->name }}" readonly> --}}
+                                    <input type="text" class="form-control" name="prepared_by" id="preparedById" value="" hidden>
+                                    <input type="text" class="form-control" id="preparedByName" value="" placeholder="Auto Generate" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <!--EXCEL ATTACHMENT-->
+                                <div class="form-group">
+                                    <div class="form-control-label" id="excelAttachmentDiv">
+                                        <label for="excelAttachmentDiv" class="form-control-label">EXCEL ATTACHMENT</label>
+                                    </div>
+                                    <input type="file" class="form-control" name="excel_attachment" id="excelAttachment" accept=".xlsx, .csv" required>
+                                    <input type="text" class="form-control d-none" name="excel_attachment_filename" id="excelAttachmentFileName" readonly>
+                                    <div class="form-group form-check d-none m-0" id="btnReuploadExcelTriggerDiv">
+                                        <input type="checkbox" class="form-check-input d-none" id="btnReuploadExcelTrigger">
+                                        <label class="d-none" id="btnReuploadExcelTriggerLabel"> Re-upload EXCEL File</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Remarks</label>
+                                    <input type="text" class="form-control" name="remarks" id="remarks">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" id="btnSubmitPartsTroubleHistory" class="btn btn-success"><i class="fa fa-check"></i> Save</button>
+                        <button type="submit" id="btnSubmitCSR" class="btn btn-success"><i class="fa fa-check"></i> Save</button>
                     </div>
                 </form>
             </div>
@@ -237,7 +215,7 @@
     <!-- /.modal -->
 
     <!-- MODALS -->
-    <div class="modal fade" id="modalExportReport" data-bs-backdrop="static">
+    {{-- <div class="modal fade" id="modalExportReport" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
                 <div class="modal-header">
@@ -248,7 +226,7 @@
                 </div>
                 <form id="exportPTHSReportForm" action="{{ route('export_excel') }}" method="GET">
                     <div class="modal-body">
-                        {{-- @csrf --}}
+                        @csrf
                         <div class="row" style="display:flex; gap:10px; align-items:end;">
                             <div class="col">
                                 <label>From</label>
@@ -266,12 +244,6 @@
                                 <label>Situation</label>
                                 <select class="form-control select2bs5" name="situation_export" id="selectSituationToExport" required>
                                     <option value="" selected>Select Situation</option>
-                                    {{-- <option value="ALL">ALL</option>
-                                    <option value="External Claim">External Claim</option>
-                                    <option value="Internal Claim">Internal Claim</option>
-                                    <option value="Lot Out">Lot Out</option>
-                                    <option value="Yield of Targets">Yield of Targets</option>
-                                    <option value="Defect Escalation">Defect Escalation</option> --}}
                                 </select>
                             </div>
 
@@ -311,11 +283,8 @@
                     </div>
                 </form>
             </div>
-            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal -->
+    </div> --}}
 @endsection
 
 @section('js_content')

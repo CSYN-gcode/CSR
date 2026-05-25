@@ -2,10 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
-// Controllers
 use App\Http\Controllers\CustomersController;
+use App\Http\Controllers\CsrDocumentController;
 // use App\Http\Controllers\SituationsController;
-// use App\Http\Controllers\PartsTroubleHistoryController;
+// use App\Http\Controllers\CsrDocumentController;
 
 use App\Http\Controllers\UserController;
 // use App\Http\Controllers\DmrpqcTsController;
@@ -67,20 +67,21 @@ Route::controller(CustomersController::class)->group(function () {
     Route::post('/add_customers', 'addCustomersInfo')->name('add_customers');
     Route::get('/get_customers_by_id', 'getCustomersById')->name('get_customers_by_id');
     Route::post('/update_customers_status', 'updateCustomersStatus')->name('update_customers_status');
-    Route::get('/get_customers', 'getCustomers')->name('get_customers');
+    // Route::get('/get_customers', 'getCustomers')->name('get_customers');
+    Route::get('/get_customer_dropdown_list', 'getCustomersDropdownList')->name('get_customer_dropdown_list');
 });
 
 // CSR Document CONTROLLER
 Route::controller(CsrDocumentController::class)->group(function () {
-    Route::get('/view_parts_trouble_history', 'viewPartsTroubleHistoryInfo')->name('view_parts_trouble_history');
-    Route::post('/add_parts_trouble_history', 'addPartsTroubleHistoryInfo')->name('add_parts_trouble_history');
-    Route::get('/get_parts_trouble_history_by_id', 'getPartsTroubleHistoryById')->name('get_parts_trouble_history_by_id');
-    Route::post('/update_parts_trouble_history_status', 'updatePartsTroubleHistoryStatus')->name('update_parts_trouble_history_status');
-    Route::get('/download_file/{id}', 'downloadFile')->name('download_file');
-    Route::get('/export_excel', 'exportExcel')->name('export_excel');
-    Route::get('/get_count_no_of_occurrence', 'getCountOfNoOfOccurrence')->name('get_count_no_of_occurrence');
-    Route::get('/get_device_name', 'getDeviceName')->name('get_device_name');
-    Route::get('/get_users', 'getUsers')->name('get_users');
+    Route::get('/view_csr_document', 'viewCsrDocumentInfo')->name('view_csr_document');
+    Route::post('/add_csr_document', 'addCsrDocumentInfo')->name('add_csr_document');
+    Route::get('/get_csr_document_by_id', 'getCsrDocumentById')->name('get_csr_document_by_id');
+    Route::post('/update_csr_document_status', 'updateCsrDocumentStatus')->name('update_csr_document_status');
+    Route::get('/download_file/{id}/{type}', 'downloadFile')->name('download_file');
+    // Route::get('/export_excel', 'exportExcel')->name('export_excel');
+    // Route::get('/get_count_no_of_occurrence', 'getCountOfNoOfOccurrence')->name('get_count_no_of_occurrence');
+    // Route::get('/get_device_name', 'getDeviceName')->name('get_device_name');
+    // Route::get('/get_users', 'getUsers')->name('get_users');
 });
 
 // // Situations CONTROLLER

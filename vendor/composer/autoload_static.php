@@ -600,6 +600,7 @@ class ComposerStaticInit5646079f6441684b9b1f47b529b6017e
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Exports\\ExportPartsTroubleHistory' => __DIR__ . '/../..' . '/app/Exports/ExportPartsTroubleHistory.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\CsrDocumentController' => __DIR__ . '/../..' . '/app/Http/Controllers/CsrDocumentController.php',
         'App\\Http\\Controllers\\CustomersController' => __DIR__ . '/../..' . '/app/Http/Controllers/CustomersController.php',
         'App\\Http\\Controllers\\DefectsController' => __DIR__ . '/../..' . '/app/Http/Controllers/old/DefectsController.php',
         'App\\Http\\Controllers\\PartsTroubleHistoryController' => __DIR__ . '/../..' . '/app/Http/Controllers/old/PartsTroubleHistoryController.php',

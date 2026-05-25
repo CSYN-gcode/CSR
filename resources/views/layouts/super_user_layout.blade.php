@@ -21,14 +21,14 @@ $user_level = 0;
                     you are free to change below module_id equals to your module_id
                 -->
                 @if ($_SESSION['rapidx_user_accesses'][$index]['module_id'] == 51)
-                    <!-- 51- PTHS -->
+                    <!-- 55- CSR -->
                     @php
                         $isAuthorized = true;
                         $user_level = $_SESSION['rapidx_user_accesses'][$index]['user_level_id']; // Collect the user_level_id
 
                         // Check if the main system sent a user ID
                         // $currentUser = \App\Models\User::where('rapidx_user_id', $_SESSION['rapidx_user_id'] ?? null)->first();
-                        
+
                     @endphp
                     @break
                 @endif
@@ -51,7 +51,7 @@ $user_level = 0;
         <head>
             <meta charset="utf-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <title>PTHS | @yield('title')</title>
+            <title>CSR | @yield('title')</title>
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <meta name="csrf-token" content="{{ csrf_token() }}">
             <link rel="shortcut icon" type="image/png" href="{{ asset('public/images/favicon1.ico') }}">

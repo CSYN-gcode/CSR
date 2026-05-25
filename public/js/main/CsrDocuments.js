@@ -2,11 +2,11 @@ $(document).ready(function () {
     // --------------------------------------
     // Cache DOM elements
     // --------------------------------------
-    const $table = $('#tblPartsTroubleHistory');                                    //table for parts_trouble_history
-    const $form = $('#formPartsTroubleHistory');                                    //form for parts_trouble_history
-    const $modal = $('#modalPartsTroubleHistory');                                  //modal for parts_trouble_history
-    const $addButtonPTH = $('#btnShowAddPartsTroubleHistory');      //button for adding parts_trouble_history
-    const dtPTH = initPartsTroubleHistoryTable($table);
+    const $table = $('#tblCSR');                                    //table for csr_document
+    const $form = $('#formCSR');                                    //form for csr_document
+    const $modal = $('#modalCSR');                                  //modal for csr_document
+    const $addButtonCSR = $('#btnShowAddCSR');      //button for adding csr_document
+    const dtPTH = initCSRTable($table);
     const $tableIA = $('#tblImprovementActions');                   //table for improvement actions
     const $addButtonIA = $('#btnAddImprovementAction');             //button for adding improvement actions
     const $exportReportButton = $('#btnShowExportReportModal');             //button for adding improvement actions
@@ -33,10 +33,10 @@ $(document).ready(function () {
     // --------------------------------------
     // Bind all event handlers
     // --------------------------------------
-    bindPartsTroubleHistoryEvents($table,
+    bindCSREvents($table,
         $form,
         $modal,
-        $addButtonPTH,
+        $addButtonCSR,
         dtPTH,
         $tableIA,
         $addButtonIA,
@@ -48,7 +48,7 @@ $(document).ready(function () {
  * Reset a form and clear hidden fields
  * @param {string|jQuery} formSelector - the form element or selector
  */
-function resetPartsTroubleHistoryForm(formSelector, tableImprovementActions) {
+function resetCSR(formSelector, tableImprovementActions) {
     const $formSelector = $(formSelector);
     $formSelector[0].reset();
     $formSelector.find('input[type="hidden"]').val('');
@@ -123,7 +123,7 @@ function resetPartsTroubleHistoryForm(formSelector, tableImprovementActions) {
 /**
  * Initialize DataTable
  */
-function initPartsTroubleHistoryTable($table, url = 'view_parts_trouble_history') {
+function initCSRTable($table, url = 'view_csr_document') {
     return $table.DataTable({
         processing: true,
         serverSide: true,
@@ -132,36 +132,13 @@ function initPartsTroubleHistoryTable($table, url = 'view_parts_trouble_history'
         columns: [
             { data: 'action', orderable: false, searchable: false },
             { data: 'status_label' },
-            { data: 'date_encountered' },    // customize this per parts_trouble_history
-            { data: 'situation_label' },    // customize this per parts_trouble_history
-            { data: 'section' },    // customize this per parts_trouble_history
-            { data: 'model' },    // customize this per parts_trouble_history
-            { data: 'defects.defect_item.defect_name' },    // customize this per parts_trouble_history
-            {
-                data: 'defects.illustration_of_defect',
-                orderable: false,
-                searchable: false,
-                render: function (data, type, row) {
-                    if (!data) {
-                        return '-';
-                    }
-
-                    // Get the base path dynamically from current URL
-                    const baseUrl = window.location.origin + window.location.pathname.split('/')[1] ? `/${window.location.pathname.split('/')[1]}` : '';
-
-                    // old
-                    // <img src="/PTHS_test/storage/app/public/file_attachments/${data}"
-                    //         alt="Defect Image"
-                    //         style="max-width:300px; max-height:300px; width:300px; height:300px; object-fit:contain;"></img>
-
-                    return `
-                        <img src="${baseUrl}/storage/app/public/file_attachments/${data}"
-                            alt="Defect Image"
-                            style="max-width:300px; max-height:300px; width:300px; height:300px; object-fit:contain;">
-                    `;
-                }
-            },
-            { data: 'defects.no_of_occurrence' }    // customize this per parts_trouble_history
+            { data: 'control_no' },
+            { data: 'customer_name' },
+            { data: 'business_process' },
+            { data: 'date_applied' },
+            { data: 'revision_no' },
+            { data: 'change_description' },
+            { data: 'prepared_by' }
         ]
     });
 }
@@ -169,50 +146,44 @@ function initPartsTroubleHistoryTable($table, url = 'view_parts_trouble_history'
 /**
  * Bind events for buttons, forms, etc.
  */
-function bindPartsTroubleHistoryEvents($table, $form, $modal, $addButtonPTH, dtPTH, $tableIA, $addButtonIA, $exportReportButton) {
+function bindCSREvents($table, $form, $modal, $addButtonCSR, dtPTH, $tableIA, $addButtonIA, $exportReportButton) {
 
     // initial check (on page load)
     updateRemoveButtons($tableIA);
 
-    $addButtonPTH.on('click', function () {
-        resetPartsTroubleHistoryForm($form, $tableIA);
-        getDefects($('#defectId'));
-        getSituations($('#selectSituation'));
+    $addButtonCSR.on('click', function () {
+        resetCSR($form, $tableIA);
+        // getDefects($('#defectId'));
+        // getSituations($('#selectSituation'));
         // getPic($('#tblImprovementActions #selectPic'));
-        getPic($('#tblImprovementActions tr:last').find('.selectPic'));
-        $('#modalPartsTroubleHistory').modal('show');
+        // getPic($('#tblImprovementActions tr:last').find('.selectPic'));
+        getCustomerName($('.selectCustomer'));
+        $('#modalCSR').modal('show');
     });
 
     // Submit form (Add / Edit)
     $form.on('submit', function (e) {
         e.preventDefault();
-        savePartsTroubleHistory($form, $modal, dtPTH);
+        saveCSR($form, $modal, dtPTH);
     });
 
     // Edit button
     $table.on('click', '.btnEdit', function () {
         const id = $(this).data('id');
-        fetchPartsTroubleHistoryById(id, $modal, $tableIA, $form, 'edit');
+        fetchCSRById(id, $modal, $form, 'edit');
     });
 
     // View button
     $table.on('click', '.btnView', function () {
         const id = $(this).data('id');
-        fetchPartsTroubleHistoryById(id, $modal, $tableIA, $form, 'view');
-        // if($mode == 'view'){
-        // $('#mySelect').prop('disabled', true).trigger('change.select2');
-        // setTimeout(function() {
-        //     $form.find('input, textarea, select').prop('disabled', true);
-        //     $form.find('#btnReuploadTrigger').prop('disabled', true);
-        //     $form.find('#btnReuploadTrigger').prop('checked', false);
-        // }, 3000);
+        fetchCSRById(id, $modal, $form, 'view');
     });
 
     // Disable button
     $table.on('click', '.btnDisable', function () {
         const id = $(this).data('id');
         confirmAction('Are you sure you want to disable this?', function () {
-            updatePartsTroubleHistoryStatus(id, dtPTH);
+            updateCSRStatus(id, dtPTH);
         });
     });
 
@@ -220,7 +191,7 @@ function bindPartsTroubleHistoryEvents($table, $form, $modal, $addButtonPTH, dtP
     $table.on('click', '.btnEnable', function () {
         const id = $(this).data('id');
         confirmAction('Are you sure you want to enable this?', function () {
-            updatePartsTroubleHistoryStatus(id, dtPTH);
+            updateCSRStatus(id, dtPTH);
         });
     });
 
@@ -279,7 +250,7 @@ function bindPartsTroubleHistoryEvents($table, $form, $modal, $addButtonPTH, dtP
 
         // Update button states
         updateRemoveButtons($tableIA);
-        getPic($newSelect);
+        // getPic($newSelect);
     });
 
     // --------------------
@@ -293,27 +264,43 @@ function bindPartsTroubleHistoryEvents($table, $form, $modal, $addButtonPTH, dtP
     });
 
     // ================================= RE-UPLOAD FILE =================================
-    $('#btnReuploadTrigger').on('click', function(){
-        $('#btnReuploadTrigger').attr('checked', 'checked');
+    $('#btnReuploadPdfTrigger').on('click', function(){
+        $('#btnReuploadPdfTrigger').attr('checked', 'checked');
         if($(this).is(":checked")){
-            $form.find("#illustrationOfDefect").removeClass('d-none');
-            $form.find("#illustrationOfDefect").attr('required', true);
-            $form.find("#illustrationOfDefectFileName").addClass('d-none');
-            $form.find("#downloadFile").addClass('d-none');
+            $form.find("#pdfAttachment").removeClass('d-none');
+            $form.find("#pdfAttachment").attr('required', true);
+            $form.find("#pdfAttachmentFileName").addClass('d-none');
+            $form.find("#downloadPdfFile").addClass('d-none');
         }else{
-            $form.find("#illustrationOfDefect").addClass('d-none');
-            $form.find("#illustrationOfDefect").removeAttr('required');
-            $form.find("#illustrationOfDefect").val('');
-            $form.find("#illustrationOfDefectFileName").removeClass('d-none');
-            $form.find("#downloadFile").removeClass('d-none');
+            $form.find("#pdfAttachment").addClass('d-none');
+            $form.find("#pdfAttachment").removeAttr('required');
+            $form.find("#pdfAttachment").val('');
+            $form.find("#pdfAttachmentFileName").removeClass('d-none');
+            $form.find("#downloadPdfFile").removeClass('d-none');
+        }
+    });
+
+    $('#btnReuploadExcelTrigger').on('click', function(){
+        $('#btnReuploadExcelTrigger').attr('checked', 'checked');
+        if($(this).is(":checked")){
+            $form.find("#excelAttachment").removeClass('d-none');
+            $form.find("#excelAttachment").attr('required', true);
+            $form.find("#excelAttachmentFileName").addClass('d-none');
+            $form.find("#downloadExcelFile").addClass('d-none');
+        }else{
+            $form.find("#excelAttachment").addClass('d-none');
+            $form.find("#excelAttachment").removeAttr('required');
+            $form.find("#excelAttachment").val('');
+            $form.find("#excelAttachmentFileName").removeClass('d-none');
+            $form.find("#downloadExcelFile").removeClass('d-none');
         }
     });
 
     $exportReportButton.on('click', function (){
         const $formExport = $('#exportPTHSReportForm');
         $formExport[0].reset();
-        getSituations($('#selectSituationToExport'), '', 'Export');
-        getDefects($('#defectIdToExport'), '', 'Export');
+        // getSituations($('#selectSituationToExport'), '', 'Export');
+        // getDefects($('#defectIdToExport'), '', 'Export');
         $('#modalExportReport').modal('show');
     });
 
@@ -396,7 +383,7 @@ function getDefects(cboElement, defectId = null, mode = null){
             if(defectId != null){
                 cboElement.val(defectId).trigger('change');
             }
-            
+
             if(mode == 'view'){
                 cboElement.prop('disabled', true).trigger('change.select2');
             }
@@ -536,14 +523,14 @@ function getPic(cboElement, picId = null, $mode = null){
 }
 
 /**
- * Save (add/update) parts_trouble_history data
+ * Save (add/update) csr_document data
  */
-function savePartsTroubleHistory($form, $modal, dtPartsTroubleHistory) {
+function saveCSR($form, $modal, dtCSR) {
     let form = $form[0];
     let formData = new FormData(form);
 
     $.ajax({
-        url: 'add_parts_trouble_history',
+        url: 'add_csr_document',
         method: 'POST',
         data: formData,
         contentType: false,   // required for file upload
@@ -554,7 +541,7 @@ function savePartsTroubleHistory($form, $modal, dtPartsTroubleHistory) {
         },
         success: function (response) {
             if (response.result === 1) {
-                dtPartsTroubleHistory.draw(false);
+                dtCSR.draw(false);
                 $modal.modal('hide');
                 $form[0].reset();
                 showSuccess('Successfully saved!');
@@ -568,12 +555,12 @@ function savePartsTroubleHistory($form, $modal, dtPartsTroubleHistory) {
 }
 
 /**
- * Fetch parts_trouble_history data by ID
+ * Fetch csr_document data by ID
  */
-function fetchPartsTroubleHistoryById(id, $modal, $tableIA, $form, $mode) {
+function fetchCSRById(id, $modal, $form, $mode) {
     $.ajax({
         type: 'GET',
-        url: 'get_parts_trouble_history_by_id',
+        url: 'get_csr_document_by_id',
         data: { id },
         dataType: 'json',
         success: function (response){
@@ -581,85 +568,59 @@ function fetchPartsTroubleHistoryById(id, $modal, $tableIA, $form, $mode) {
                 disableForm($form);
             }
 
-            // Show Reupload Div & Exisiting Filename
-            $form.find("#btnReuploadTriggerDiv").removeClass('d-none');
-            $form.find("#btnReuploadTrigger").removeClass('d-none');
-            $form.find("#btnReuploadTrigger").prop('checked', false);
-            $form.find("#btnReuploadTriggerLabel").removeClass('d-none');
-            $form.find("#illustrationOfDefectFileName").removeClass('d-none');
+            // Show Reupload Div & Exisiting PDF Filename
+            $form.find("#btnReuploadPdfTriggerDiv").removeClass('d-none');
+            $form.find("#btnReuploadPdfTrigger").removeClass('d-none');
+            $form.find("#btnReuploadPdfTrigger").prop('checked', false);
+            $form.find("#btnReuploadPdfTriggerLabel").removeClass('d-none');
+            $form.find("#pdfAttachmentFileName").removeClass('d-none');
 
-            // Hide Upload Attachment section, remove required attribute
-            $form.find("#illustrationOfDefect").addClass('d-none');
-            $form.find("#illustrationOfDefect").removeAttr('required');
+            // Hide PDF Upload Attachment section, remove required attribute
+            $form.find("#pdfAttachment").addClass('d-none');
+            $form.find("#pdfAttachment").removeAttr('required');
 
-            // Populate modal fields (adjust names per parts_trouble_history)
-            $form.find('#txtPartsTroubleHistoryId').val(response.id);
-            $form.find('#situation').val(response.situation);
-            $form.find('#section').val(response.section);
-            $form.find('#dateEncountered').val(response.date_encountered);
-            $form.find('#illustrationOfDefectFileName').val(response.defects.illustration_of_defect);
+            // Show Reupload Div & Exisiting EXCEL Filename
+            $form.find("#btnReuploadExcelTriggerDiv").removeClass('d-none');
+            $form.find("#btnReuploadExcelTrigger").removeClass('d-none');
+            $form.find("#btnReuploadExcelTrigger").prop('checked', false);
+            $form.find("#btnReuploadExcelTriggerLabel").removeClass('d-none');
+            $form.find("#excelAttachmentFileName").removeClass('d-none');
 
-            let download_file ='<a href="download_file/'+response.id+'" target="_blank">';
-                download_file +='<button type="button" class="btn btn-primary btn-sm d-none" name="download_file" id="downloadFile">';
-                download_file +=     '<i class="fa-solid fa-file-arrow-down"></i>';
-                download_file +=         '&nbsp;';
-                download_file +=         'See Attachment';
-                download_file +='</button>';
-                download_file +='</a>';
+            // Hide EXCEL Upload Attachment section, remove required attribute
+            $form.find("#excelAttachment").addClass('d-none');
+            $form.find("#excelAttachment").removeAttr('required');
 
-            $form.find('#attachmentDiv').append(download_file);
+            // Populate modal fields (adjust names per csr_document)
+            getCustomerName($('.selectCustomer'), response.customer_info.id);
+            $form.find('#txtCSRId').val(response.id);
+            $form.find('#revNo').val(response.revision_no);
+            $form.find('#businessProcess').val(response.business_process);
+            $form.find('#changeDescription').val(response.change_description);
+            $form.find('#pdfAttachmentFileName').val(response.pdf_attachment_info.original_name);
+            $form.find('#excelAttachmentFileName').val(response.excel_attachment_info.original_name);
+            // $form.find('#preparedByName').val(response.prepared_by_name);
+            $form.find('#remarks').val(response.remarks);
+
+            // let download_file;
+            let download_file_pdf   ='<a href="download_file/'+response.id+'/pdf" target="_blank">';
+                download_file_pdf   +=   '<button type="button" class="btn btn-primary btn-sm d-none" id="downloadPdfFile">';
+            let download_file_excel ='<a href="download_file/'+response.id+'/excel" target="_blank">';
+                download_file_excel +=   '<button type="button" class="btn btn-primary btn-sm d-none" id="downloadExcelFile">';
+            let download_file       =        '<i class="fa-solid fa-file-arrow-down"></i>';
+                download_file       +=          '&nbsp;';
+                download_file       +=          'See Attachment';
+                download_file       +=   '</button>';
+                download_file       +='</a>';
+
+            download_file_pdf = download_file_pdf + download_file;
+            download_file_excel = download_file_excel + download_file;
+
+            $form.find('#pdfAttachmentDiv').append(download_file_pdf);
+            $form.find('#excelAttachmentDiv').append(download_file_excel);
 
             // Show Download Button
-            $form.find("#downloadFile").removeClass('d-none');
-
-            getDeviceName($('#selectDeviceName'), response.section, response.model, $mode);
-            getDefects($('#defectId'), response.defects.defect_id, $mode);
-            getSituations($('#selectSituation'), response.situation, $mode);
-
-            $form.find('#noOfOccurrence').val(response.defects.no_of_occurrence);
-            $form.find('#rootCause').val(response.defects.root_cause);
-            // $('#improvementActionsRemarks').val(response.improvements.improvement_actions_remarks);
-
-            $tableIA.find('tbody').empty();
-            for(let index = 0; index < response.improvements.length; index++){
-            
-                let rowImprovements = `
-                    <tr class="data-row">
-                        <td id="removeIA">
-                            <center><button ${$mode === 'view' ? 'disabled' : ''} class="btn btn-md btn-danger removeIA" title="Remove Row" type="button"><i class="fa fa-times"></i></button></center>
-                        </td>
-                        <td>
-                            <textarea ${$mode === 'view' ? 'disabled' : ''} class="form-control form-control-sm" name="factor[]">${response.improvements[index].factor}</textarea>
-                        </td>
-                        <td>
-                            <textarea ${$mode === 'view' ? 'disabled' : ''} class="form-control form-control-sm" name="cause[]">${response.improvements[index].cause}</textarea>
-                        </td>
-                        <td>
-                            <textarea ${$mode === 'view' ? 'disabled' : ''} class="form-control form-control-sm" name="analysis[]">${response.improvements[index].analysis}</textarea>
-                        </td>
-                        <td>
-                            <textarea ${$mode === 'view' ? 'disabled' : ''} class="form-control form-control-sm" name="counter_measure[]">${response.improvements[index].counter_measure}</textarea>
-                        </td>
-                        <td>
-                            <select ${$mode === 'view' ? 'disabled' : ''} class="form-control form-control-lg select2bs5 selectPic" name="pic[]"></select>
-                        </td>
-                        <td>
-                            <input ${$mode === 'view' ? 'disabled' : ''} type="date" class="form-control form-control-lg" name="implementation_date[]" value="${response.improvements[index].implementation_date}">
-                        </td>
-                    </tr>
-                `;
-
-                // clark comment 12/29/2025 remove remarks column
-                // <td>
-                //     <textarea class="form-control" name="improvement_action[]">${response.improvements[index].improvement_actions}</textarea>
-                // </td>
-                // <td>
-                //     <textarea class="form-control" name="improvement_action_remarks[]">${response.improvements[index].remarks}</textarea>
-                // </td>
-
-                $tableIA.find('tbody').append(rowImprovements);
-                getPic($('#tblImprovementActions tr:last').find('.selectPic'), response.improvements[index].pic, $mode);
-            }
+            $form.find("#downloadPdfFile").removeClass('d-none');
+            $form.find("#downloadExcelFile").removeClass('d-none');
 
             $modal.modal('show');
         },
@@ -671,22 +632,20 @@ function fetchPartsTroubleHistoryById(id, $modal, $tableIA, $form, $mode) {
 }
 
 function disableForm($form){
-    $form.find('#btnAddImprovementAction').prop('disabled', true);
-    $form.find('#btnAddImprovementAction').prop('hidden', true);
-    $form.find('#btnSubmitPartsTroubleHistory').prop('disabled', true);
-    $form.find('#btnSubmitPartsTroubleHistory').prop('hidden', true);
+    $form.find('#btnSubmitCSR').prop('disabled', true);
+    $form.find('#btnSubmitCSR').prop('hidden', true);
     $form.find('input, textarea, select').prop('disabled', true);
     $form.find('#btnReuploadTrigger').prop('disabled', true);
     $form.find('#btnReuploadTrigger').prop('checked', false);
 }
 
 /**
- * Disable or update parts_trouble_history status
+ * Disable or update csr_document status
  */
-function updatePartsTroubleHistoryStatus(id, dtPTH) {
+function updateCSRStatus(id, dtPTH) {
     $.ajax({
         type: 'POST',
-        url: 'update_parts_trouble_history_status',
+        url: 'update_csr_document_status',
         data: { id },
         dataType: 'json',
         success: function (response) {
