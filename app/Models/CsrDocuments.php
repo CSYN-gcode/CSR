@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\CsrAttachments;
 use App\Models\Customers;
+use App\Models\CsrEvidences;
 
 class CsrDocuments extends Model
 {
@@ -25,6 +26,11 @@ class CsrDocuments extends Model
     }
 
     public function prepared_by_info(){
-        return $this->hasOne(User::class, 'prepared_by', 'id');
+        return $this->hasOne(User::class, 'id', 'prepared_by');
     }
+
+    public function review_info(){
+        return $this->hasOne(CsrEvidences::class, 'csr_id', 'id')->whereNull('deleted_at');
+    }
+
 }

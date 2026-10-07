@@ -78,6 +78,8 @@ Route::controller(CsrDocumentController::class)->group(function () {
     Route::get('/get_csr_document_by_id', 'getCsrDocumentById')->name('get_csr_document_by_id');
     Route::post('/update_csr_document_status', 'updateCsrDocumentStatus')->name('update_csr_document_status');
     Route::get('/download_file/{id}/{type}', 'downloadFile')->name('download_file');
+    Route::get('/download_evidence_file/{id}/{type}', 'downloadEvidenceFile')->name('download_evidence_file');
+    Route::get('/view_images', 'viewImages')->name('view_images');
     // Route::get('/export_excel', 'exportExcel')->name('export_excel');
     // Route::get('/get_count_no_of_occurrence', 'getCountOfNoOfOccurrence')->name('get_count_no_of_occurrence');
     // Route::get('/get_device_name', 'getDeviceName')->name('get_device_name');

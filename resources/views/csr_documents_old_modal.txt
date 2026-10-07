@@ -1,0 +1,103 @@
+<!-- MODALS -->
+    <div class="modal fade" id="modalCSR" data-bs-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"><i class="fa fa-plus"></i> Add/Edit CSR Document Info</h4>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" id="formCSR" autocomplete="off">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input type="hidden" id="txtCSRId" name="csr_document_id">
+
+                                <div class="form-group">
+                                    <label>Control No</label> {{-- AUTO-GENERATE --}}
+                                    <input type="text" class="form-control" name="control_no" id="controlNo" placeholder="Auto Generate" readonly>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Customer Name</label>
+                                    <select class="form-control select2bs5 selectCustomer" name="customer" id="customer" required> {{-- AUTO GENERATE --}}
+                                        <option value="" disabled selected> Select Customer </option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Business Process</label>
+                                    <input type="text" class="form-control" name="business_process" id="businessProcess" required>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Date Applied</label>
+                                    <input type="date" class="form-control" name="date_applied" id="dateApplied" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Rev No.</label>
+                                    <input type="text" class="form-control" name="rev_no" id="revNo" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Description of Change</label>
+                                    <textarea class="form-control" name="change_description" id="changeDescription" style="height: 38px;" required></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <!--PDF ATTACHMENT-->
+                                <div class="form-group">
+                                    <div class="form-control-label" id="pdfAttachmentDiv"></div>
+                                    <input type="file" class="form-control" name="pdf_attachment" id="pdfAttachment" accept=".pdf" required>
+                                    <input type="text" class="form-control d-none" name="pdf_attachment_filename" id="pdfAttachmentFileName" readonly>
+                                    <div class="form-group form-check d-none m-0" id="btnReuploadPdfTriggerDiv">
+                                        <input type="checkbox" class="form-check-input d-none" id="btnReuploadPdfTrigger">
+                                        <label class="d-none" id="btnReuploadPdfTriggerLabel"> Re-upload PDF File</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Prepared By</label>
+                                    {{-- <input type="text" class="form-control" name="prepared_by" id="preparedById" value="{{ $globalUser->rapidx_emp_id }}" hidden>
+                                    <input type="text" class="form-control" id="preparedByName" value="{{ $globalUser->name }}" readonly> --}}
+                                    <input type="text" class="form-control" name="prepared_by" id="preparedById" value="" hidden>
+                                    <input type="text" class="form-control" id="preparedByName" value="" placeholder="Auto Generate" readonly>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <!--EXCEL ATTACHMENT-->
+                                <div class="form-group">
+                                    <div class="form-control-label" id="excelAttachmentDiv"></div>
+                                    <input type="file" class="form-control" name="excel_attachment" id="excelAttachment" accept=".xlsx, .csv" required>
+                                    <input type="text" class="form-control d-none" name="excel_attachment_filename" id="excelAttachmentFileName" readonly>
+                                    <div class="form-group form-check d-none m-0" id="btnReuploadExcelTriggerDiv">
+                                        <input type="checkbox" class="form-check-input d-none" id="btnReuploadExcelTrigger">
+                                        <label class="d-none" id="btnReuploadExcelTriggerLabel"> Re-upload EXCEL File</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Remarks</label>
+                                    <textarea class="form-control" name="remarks" id="remarks" style="height: 38px;"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" id="btnSubmitCSR" class="btn btn-success"><i class="fa fa-check"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
