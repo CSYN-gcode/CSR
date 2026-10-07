@@ -22,12 +22,18 @@ class CreateCsrDocumentsTable extends Migration
             $table->string('date_applied')->nullable();
             $table->string('revision_no')->nullable();
             $table->string('change_description')->nullable();
-            $table->string('reviewed_by')->nullable();
+            $table->string('prepared_by')->nullable();
             $table->string('remarks')->nullable();
 
             // Define columns first
             $table->unsignedBigInteger('created_by')->nullable()->comment('References db_rapidx.id');
             $table->unsignedBigInteger('last_updated_by')->nullable()->comment('References db_rapidx.id');
+
+            // Cross-database foreign key constraints
+            $table->foreign('prepared_by')
+                ->references('id')
+                ->on('db_rapidx.users')
+                ->onDelete('set null');
 
             // Cross-database foreign key constraints
             $table->foreign('created_by')

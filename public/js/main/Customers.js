@@ -208,3 +208,35 @@ function showError(message) {
         showConfirmButton: false
     });
 }
+
+function getCustomerName(cboElement, customerId = null){
+    let result = '<option value="" disabled selected> Select Customer Name </option>';
+    $.ajax({
+        method: "get",
+        url: "get_customer_dropdown_list",
+        dataType: "json",
+        beforeSend: function(){
+            result = '<option value="" disabled selected>--Loading--</option>';
+        },
+        success: function (response){
+            if(response.length > 0){
+                    result = '<option value="" disabled selected> Select Customer Name </option>';
+
+                for (let i = 0; i < response.length; i++) {
+                    result += '<option value="' + response[i]['id'] + '">' + response[i]['customer_name'] + '</option>';
+                }
+            }else{
+                result = '<option value="" selected disabled> -- No record found -- </option>';
+            }
+            cboElement.html(result);
+            if(customerId != null){
+                cboElement.val(customerId).trigger('change');
+            }
+        },
+        error: function(data, xhr, status) {
+            result = '<option value="0" selected disabled> -- Reload Again -- </option>';
+            cboElement.html(result);
+            console.log('Data: ' + data + "\n" + "XHR: " + xhr + "\n" + "Status: " + status);
+        }
+    });
+}

@@ -19,6 +19,7 @@ class CreateCsrEvidenceFilesTable extends Migration
             // Defect-specific fields
             $table->text('file_name')->nullable();
             $table->text('original_name')->nullable();
+            $table->string('file_type', 255)->nullable();
             $table->string('remarks')->nullable();
 
             // Define columns first
@@ -28,7 +29,7 @@ class CreateCsrEvidenceFilesTable extends Migration
             // Cross-database foreign key constraints
             $table->foreign('evidence_id')
                 ->references('id')
-                ->on('db_csr.csr_documents')
+                ->on('db_csr.csr_evidences')
                 ->onDelete('set null');
 
             $table->foreign('created_by')

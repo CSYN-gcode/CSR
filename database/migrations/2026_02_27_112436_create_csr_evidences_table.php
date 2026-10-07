@@ -16,6 +16,8 @@ class CreateCsrEvidencesTable extends Migration
         Schema::create('csr_evidences', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('csr_id')->nullable()->comment('References db_csr.csr_documents.id');
+            $table->string('date_reviewed')->nullable();
+            $table->string('reviewed_by')->nullable();
             $table->string('remarks')->nullable();
 
             // Define columns first
@@ -26,6 +28,11 @@ class CreateCsrEvidencesTable extends Migration
             $table->foreign('csr_id')
                 ->references('id')
                 ->on('db_csr.csr_documents')
+                ->onDelete('set null');
+
+            $table->foreign('reviewed_by')
+                ->references('id')
+                ->on('db_rapidx.users')
                 ->onDelete('set null');
 
             $table->foreign('created_by')
